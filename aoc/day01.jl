@@ -1,14 +1,18 @@
 using DelimitedFiles
+using Test
 
-function main()
-    data = readdlm("day01.txt")
-    return sum([data[i] > data[i-1] for i = 2:length(data)])
+test_input = readdlm("aoc/day01_test.txt")
+input = readdlm("aoc/day01.txt")
+
+function solve1(input)
+    return sum([input[i] > input[i-1] for i = 2:length(input)])
 end
 
-function main2()
-    data = readdlm("day01.txt")
-    return sum([sum(data[i-2:i]) > sum(data[i-3:i-1]) for i = 4:length(data)])
-end    
+function solve2(input)
+    return sum([input[i] > input[i-3] for i = 4:length(input)])
+end
 
-println(main())
-println(main2())
+@test solve1(test_input) == 7
+@test solve2(test_input) == 5
+println(solve1(input))
+println(solve2(input))
