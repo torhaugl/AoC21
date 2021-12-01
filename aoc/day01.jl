@@ -4,12 +4,12 @@ using Test
 test_input = readdlm("aoc/day01_test.txt")
 input = readdlm("aoc/day01.txt")
 
-function solve1(input)
-    return sum([input[i] > input[i-1] for i = 2:length(input)])
+function solve1(x)
+    return sum([x[i] > x[i-1] for i = 2:length(x)])
 end
 
-function solve2(input)
-    return sum([input[i] > input[i-3] for i = 4:length(input)])
+function solve2(x)
+    return sum([x[i] > x[i-3] for i = 4:length(x)])
 end
 
 @test solve1(test_input) == 7
