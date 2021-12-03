@@ -20,22 +20,17 @@ function solve2(input)
     b = strings2bitarray(input)
     cond(x) = count(==(1), x) >= count(==(0), x)
 
-    c = copy(b)
-    j = 0
-    while size(c,1) > 1
-        j += 1
-        c = cond(c[:,j]) ? c[c[:,j] .== 1,:] : c[c[:,j] .== 0,:]
+    function rating(cond, bitarray)
+        c = copy(bitarray)
+        for j = 1:size(c,2)
+            c = cond(c[:,j]) ? c[c[:,j] .== 1,:] : c[c[:,j] .== 0,:]
+            if (size(c,1) == 1) break end
+        end
+        return c |> bitarr2int
     end
 
-    d = copy(b)
-    j = 0
-    while size(d,1) > 1
-        j += 1
-        d = !cond(d[:,j]) ? d[d[:,j] .== 1,:] : d[d[:,j] .== 0,:]
-    end
-
-    o2_generator_rating = c |> bitarr2int
-    co2_scrubber_rating = d |> bitarr2int
+    o2_generator_rating = rating(cond, b)
+    co2_scrubber_rating = rating(!cond, b)
     return o2_generator_rating * co2_scrubber_rating
 end
 
