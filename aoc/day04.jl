@@ -20,6 +20,20 @@ function solve1(boards, nums)
     end
 end
 
+function solve1_v2(bo, nums)
+    boards = map(x -> findfirst(==(x), nums)[2], bo)
+    index = 0
+    val = Inf
+    for j = 1:size(boards,3)
+        if val > min(minimum(maximum(boards[:,:,j], dims=1)), minimum(maximum(boards[:,:,j], dims=2)))
+            index = j
+            val = min(minimum(maximum(boards[:,:,j], dims=1)), minimum(maximum(boards[:,:,j], dims=2)))
+        end
+    end
+    b = bo[:,:,index]
+    return sum(b[boards[:,:,index] .> val]) * nums[val]
+end
+
 function solve2(boards, nums)
     curr_max = 0
     for i = 1:length(nums)
@@ -30,7 +44,6 @@ function solve2(boards, nums)
             if isbingo(barr)
                 curr_max = sum(b[bitflip(barr)]) * nums[i]
                 append!(x, j)
-                println(i, " ", curr_max, " ", sum(b[bitflip(barr)]), " ", nums[i])
             end
         end
         boards = boards[:,:,setdiff(1:end, x)]
@@ -39,4 +52,5 @@ function solve2(boards, nums)
 end
 
 println(solve1(boards, nums))
+println(solve1_v2(boards, nums))
 println(solve2(boards, nums))
