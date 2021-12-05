@@ -14,7 +14,7 @@ function iter(i,j)
 end
 
 function solve1(nums)
-        x1, y1, x2, y2 = nums[:,1] .+1, nums[:,2] .+1, nums[:,3] .+1, nums[:,4] .+1
+    x1, y1, x2, y2 = nums[:,1] .+1, nums[:,2] .+1, nums[:,3] .+1, nums[:,4] .+1
 
     board = zeros(maximum(nums)+1, maximum(nums)+1)
     for (a,b,c,d) = zip(x1, x2, y1, y2)
