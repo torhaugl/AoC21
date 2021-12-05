@@ -1,7 +1,8 @@
 using DelimitedFiles
+using Test
 
 nums = readdlm("aoc/day05.txt", ',', Int)
-#nums = readdlm("aoc/day05_test.txt", ',', Int)
+nums_test = readdlm("aoc/day05_test.txt", ',', Int)
 
 function solve1(nums)
     x1, y1, x2, y2 = nums[:,1] .+1, nums[:,2] .+1, nums[:,3] .+1, nums[:,4] .+1
@@ -52,5 +53,7 @@ function solve2(nums)
     return count(>=(2), board)
 end
 
+@test solve1(nums_test) == 5
 println(solve1(nums))
+@test solve2(nums_test) == 12
 println(solve2(nums))
