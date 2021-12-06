@@ -10,7 +10,7 @@ function solve(nums, days)
     fish = OffsetArray(fish, 0:8)
     for _ = 1:days
         fish = circshift(fish, -1)
-        fish[6] += fish[8]
+        fish[6] += fish[end]
     end
     return sum(fish)
 end
