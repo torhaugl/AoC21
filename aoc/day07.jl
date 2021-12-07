@@ -12,7 +12,6 @@ function solve2(x)
     return [cost(x .- i) for i = minimum(x):maximum(x)] |> minimum
 end
 
-#@test solve(nums_test, 18) == 26
 @test solve1(nums_test) == 37
 println(solve1(nums))
 
