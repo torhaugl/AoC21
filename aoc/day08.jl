@@ -1,38 +1,39 @@
+using Random
 using Combinatorics
+using OffsetArrays
 
 function solve1(input)
     filter2347(x) = filter(y -> y ∈ [2, 3, 4, 7], x)
     return [split(l, "|")[2] |> split .|> length |> filter2347 |> length for l in eachline(input)] |> sum
 end
 
-function solve2(input)
-    # Doesn't work
+function solve2_permute(input)
+    # DOesnt work
     inp1 = [split(l, "|")[1] |> split for l in eachline(input)]
     inp2 = [split(l, "|")[2] |> split for l in eachline(input)]
-    nums = ["abcefg", "cf", "acdeg", "acdfg", "bcdf", "abdfg", "abdefg", "acf", "abcdefg", "abcdfg"]
-    for (line1, line2) in zip(inp1, inp2)
-        global rline2 = line2
-        for p in permutations(["a", "b", "c", "d", "e", "f", "g"])
-            #global rline1 = [replace(l, p[1] => "a", p[2] => "b", p[3] => "c", p[4] => "d", p[5] => "e", p[6] => "f", p[7] => "g") for l in line1]
-            #global rline1 = [replace(l, p[1] => "a", p[2] => "b", "b" => "c", p[4] => "d", p[5] => "e", "e" => "f", p[7] => "g") for l in line1]
-            #println(p)
-            #println(sort(rline1))
-            println(sort(nums))
-            #println([a == b for (a, b) in zip(sort(rline1), sort(nums))])
-            break
-            #if all([a == b for (a, b) in zip(sort(rline1), sort(nums)])
-                #println("HEI")
-                #global rline2 = replace(line2, p[1] => "a", p[2] => "b", p[3] => "c", p[4] => "d", p[5] => "e", p[6] => "f", p[7] => "g")
-            #end
+    nums = Dict("abcefg" => 0, "cf" => 1, "acdeg" => 2, "acdfg" => 3, "bcdf" => 4, "abdfg" => 5, "abdefg" => 6, "acf" => 7, "abcdefg" => 8, "abcdfg" => 9)
+    tonum(x) = get(nums, x, nothing)
+    isnum(x) = !isnothing(tonum(x))
+
+    function lines2num(left, right)
+        #for p in permutations(0:9)
+        for p in [collect(permutations(1:10))[1]]
+            println(p)
+            permuted_left = copy(left)
+            println(permuted_left)
+            permuted_left = [permute!(collect(word), p) |> join for word in permuted_left]
+            println(permuted_left)
+            if all(isnum, permuted_left)
+                println("JIPPI")
+                permuted_right = [permute!(word, p) for word in right]
+                return parse(Int, map(tonum, permuted_right) |> join)
+            end
         end
-        #println(rline1)
-        #println(rline2)
-        #[findfirst(==(word), nums)[1] for word in rline2]
-        break
     end
-    return
+
+    return [lines2num(left, right) for (left, right) in zip(inp1, inp2)] |> sum
 end
-#solve2("aoc/day08_test.txt")
+#solve2_permute("aoc/day08_test.txt")
 
 function line2nums(line, nums)
     line = [join(sort(collect(l))) for l in line]
@@ -90,3 +91,35 @@ end
 
 println(solve1("aoc/day08.txt"))
 println(solve2("aoc/day08.txt"))
+
+
+nums_b = [1 1 1 0 1 1 1  #0
+          0 1 0 0 1 0 0  #1
+          1 0 1 1 1 0 1  #2
+          1 1 0 1 1 0 1  #3
+          0 1 0 1 1 1 0  #4
+          1 1 0 1 0 1 1  #5
+          1 1 1 1 0 1 1  #6
+          0 1 0 0 1 0 1  #7
+          1 1 1 1 1 1 1  #8
+          1 1 0 1 1 1 1] #9
+
+bit = BitArray(nums_b)
+
+row4 = bit[findfirst(==(4), sum(bit, dims=2))[1], :]
+row7 = bit[findfirst(==(3), sum(bit, dims=2))[1], :]
+
+sbitpl = vcat(bit, [row4'; row4'; row7'; row7'; row7'])
+sbit = bit[:, sortperm(vec(sum(sbitpl, dims=1)))]
+
+
+
+randbit = bit[:, shuffle(1:end)]
+
+row4 = randbit[findfirst(==(4), sum(randbit, dims=2))[1], :]
+row7 = randbit[findfirst(==(3), sum(randbit, dims=2))[1], :]
+
+rsbitpl = vcat(randbit, [row4'; row4'; row7'; row7'; row7'])
+rsbit = randbit[:, sortperm(vec(sum(rsbitpl, dims=1)))]
+sum(rsbitpl, dims=1)
+rsbit - sbit
