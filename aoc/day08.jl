@@ -44,26 +44,26 @@ function line2nums(line, nums)
     eight = line[findfirst(x -> length(x) == 7, line)]
 
     right = one
-    top = replace(replace(seven, right[1] => ""), right[2] => "")
-    middleleft = replace(replace(four, right[1] => ""), right[2] => "")
-    bottom = replace(replace(replace(replace(replace(eight, right[1] => ""),
-                                                               right[2] => ""),
-                                                               top[1] => ""),
-                                                               middleleft[1] => ""),
-                                                               middleleft[2] => "")
+    top = filter(c -> c ∉ right, seven)
+    middleleft = filter(c -> c ∉ right, four)
+    bottom = filter(c -> c ∉ right * top * middleleft, eight)
 
-    two = line[findfirst(x -> (length(x) == 5 &&
-                    !(right[1] ∈ x && right[2] ∈ x) &&
-                    !(middleleft[1] ∈ x && middleleft[2] ∈ x) &&
-                    (bottom[1] ∈ x && bottom[2] ∈ x) &&
-                    top[1] ∈ x), line)]
-    three = line[findfirst(x -> (length(x) == 5 &&
-                    right[1] ∈ x && right[2] ∈ x &&
-                    !(middleleft[1] ∈ x && middleleft[2] ∈ x) &&
-                    !(bottom[1] ∈ x && bottom[2] ∈ x) &&
-                    top[1] ∈ x), line)]
-    five = line[findfirst(x -> (length(x) == 5 &&
-                    x != two && x != three), line)]
+    two = line[findfirst(x -> (
+                              length(x) == 5 &&
+                              !(right[1] ∈ x && right[2] ∈ x) &&
+                              !(middleleft[1] ∈ x && middleleft[2] ∈ x) &&
+                              (bottom[1] ∈ x && bottom[2] ∈ x) &&
+                              top[1] ∈ x
+                              ), line)]
+    three = line[findfirst(x -> (
+                                length(x) == 5 &&
+                                right[1] ∈ x && right[2] ∈ x &&
+                                !(middleleft[1] ∈ x && middleleft[2] ∈ x) &&
+                                !(bottom[1] ∈ x && bottom[2] ∈ x) &&
+                                top[1] ∈ x
+                                ), line)]
+    five = line[findfirst(x -> (length(x) == 5 && x != two && x != three), line)]
+
     six = line[findfirst(x -> (length(x) == 6 && !(right[1] ∈ x && right[2] ∈ x)), line)]
     nine = line[findfirst(x -> (length(x) == 6 && !(bottom[1] ∈ x && bottom[2] ∈ x)), line)]
     zero = line[findfirst(x -> (length(x) == 6 && x != six && x != nine), line)]
@@ -82,11 +82,9 @@ function line2nums(line, nums)
 end
 
 function solve2(input)
-    x = collect(eachline(input))
-    y = [split(x, "|") for x in x]
-    lines = [split(x[1], " ") for x in y]
-    numss = [split(x[2], " ") for x in y]
-    d = [line2nums(line, nums[2:end]) for (line, nums) in zip(lines, numss)];
+    inp1 = [split(l, "|")[1] |> split for l in eachline(input)]
+    inp2 = [split(l, "|")[2] |> split for l in eachline(input)]
+    d = [line2nums(line, nums) for (line, nums) in zip(inp1, inp2)];
     return [v * 10^(4 - i) for (i, v) in enumerate(sum(d))] |> sum
 end
 
