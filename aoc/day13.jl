@@ -14,7 +14,7 @@ function fold_y(A, y)
     y += 1
     B = copy(A[1:y-1, :])
     for x = 1:size(A, 2)
-        for i = 1:(size(A,1) - y)-1
+        for i = 1:(size(A,1) - y)
             B[y-i,x] = A[y-i,x] || A[y+i,x]
         end
     end
@@ -26,7 +26,6 @@ function fold_x(A, x)
     B = copy(A[:, 1:x-1])
     for y = 1:size(A, 1)
         for i = 1:(size(A, 2) - x)
-            println("($y, $x), $i: ($y $(x-i) $(A[y,x-i])), ($y $(x+i) $(A[y,x+i]))")
             B[y,x-i] = A[y,x-i] || A[y,x+i]
         end
     end
@@ -34,18 +33,17 @@ function fold_x(A, x)
 end
 
 # TEST
-mat = read_input("aoc/day13_test.txt")
-sum(mat)
-mat = fold_y(mat, 7)
-sum(mat)
-mat = fold_x(mat, 5)
-sum(mat)
+#mat = read_input("aoc/day13_test.txt")
+#sum(mat)
+#mat = fold_y(mat, 7)
+#sum(mat)
+#mat = fold_x(mat, 5)
+#sum(mat)
 
 
 
 mat = read_input("aoc/day13.txt")
 mat = fold_x(mat, 655)
-
 sum(mat)
 mat = fold_y(mat, 447)
 mat = fold_x(mat, 327)
@@ -58,18 +56,5 @@ mat = fold_x(mat, 40)
 mat = fold_y(mat, 27)
 mat = fold_y(mat, 13)
 mat = fold_y(mat, 6)
-mat |> sum
-
-# remember to plus 1
-# fold along x=655
-# fold along y=447
-# fold along x=327
-# fold along y=223
-# fold along x=163
-# fold along y=111
-# fold along x=81
-# fold along y=55
-# fold along x=40
-# fold along y=27
-# fold along y=13
-# fold along y=6
+using Plots
+heatmap(mat[end:-1:1,:], aspect_ratio=:equal)
