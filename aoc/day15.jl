@@ -61,7 +61,6 @@ function djikstra()
     end
     return d, prev
 end
-using BenchmarkTools
-@btime djikstra()
+djikstra()
 prev
 d
