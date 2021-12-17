@@ -6,7 +6,6 @@ solve1(target_y) = (minimum(target_y) * (minimum(target_y) - 1)) ÷ 2
 solve1(target_y)
 
 function in_target(vel_x, vel_y)
-
     vx = vel_x
     vy = vel_y
     x = 0
